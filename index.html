@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth scroll-pt-24">
 
 <head>
     <meta charset="UTF-8">
@@ -235,10 +235,172 @@
             box-shadow: 0 14px 36px rgba(37, 211, 102, 0.6);
             animation: none;
         }
+
+        /* === SCROLL PROGRESS BAR === */
+        #scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            z-index: 9999;
+            border-radius: 0 2px 2px 0;
+            transition: width 0.1s linear;
+        }
+
+        /* === BACK TO TOP === */
+        #back-to-top {
+            position: fixed;
+            bottom: 96px;
+            right: 24px;
+            z-index: 998;
+            width: 44px;
+            height: 44px;
+            background: var(--primary);
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(31, 111, 95, 0.35);
+            opacity: 0;
+            transform: translateY(16px) scale(0.85);
+            transition: opacity 0.35s ease, transform 0.35s ease;
+            pointer-events: none;
+            border: none;
+        }
+
+        #back-to-top.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+
+        #back-to-top:hover {
+            background: var(--accent);
+            transform: translateY(-3px) scale(1.1);
+        }
+
+        /* === TOAST === */
+        #toast-container {
+            position: fixed;
+            bottom: 28px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+        }
+
+        .toast {
+            background: #111;
+            color: #fff;
+            padding: 12px 22px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+            pointer-events: auto;
+            white-space: nowrap;
+            animation: toastIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        .toast.success {
+            border-left: 4px solid #22c55e;
+        }
+
+        .toast.info {
+            border-left: 4px solid var(--secondary);
+        }
+
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes toastOut {
+            to {
+                opacity: 0;
+                transform: translateY(10px) scale(0.9);
+            }
+        }
+
+        .toast.hide {
+            animation: toastOut 0.3s ease forwards;
+        }
+
+        /* === CARD ENTRANCE === */
+        .product-card {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .product-card.card-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* === ACTIVE NAV === */
+        a.nav-active {
+            background: rgba(255, 255, 255, 0.9) !important;
+            color: var(--primary) !important;
+        }
+
+        /* === MOBILE HERO IMAGE === */
+        .hero-mobile-img {
+            display: none;
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 1.5rem;
+            margin-top: 1.5rem;
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12);
+        }
+
+        @media (max-width: 1023px) {
+            .hero-mobile-img {
+                display: block;
+            }
+        }
+
+        /* === BETTER RESPONSIVE FIXES === */
+        @media (max-width: 640px) {
+            .hero-content h1 {
+                font-size: 2.4rem;
+                line-height: 1.1;
+            }
+
+            #mega-catalog .filter-btn {
+                font-size: 0.75rem;
+                padding: 8px 14px;
+            }
+        }
     </style>
 </head>
 
 <body class="antialiased selection:bg-accent selection:text-white">
+
+    <!-- Scroll Progress Bar -->
+    <div id="scroll-progress"></div>
+    <!-- Back To Top -->
+    <button id="back-to-top" aria-label="Back to top"><i class="fa-solid fa-arrow-up text-sm"></i></button>
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
 
     <!-- ========== AMBIENT ORBS ========== -->
     <div class="orb bg-lightui w-[500px] h-[500px] -top-[8%] -left-[8%] animate-blob"></div>
@@ -270,10 +432,10 @@
                     class="hidden lg:flex space-x-1 items-center bg-white/40 px-2 py-1 rounded-full border border-white/50">
                     <a href="#home"
                         class="px-4 py-2 rounded-full text-gray-800 hover:bg-white/80 hover:text-primary font-semibold transition-all duration-300 text-sm">Home</a>
-                    <a href="#about"
-                        class="px-4 py-2 rounded-full text-gray-800 hover:bg-white/80 hover:text-primary font-semibold transition-all duration-300 text-sm">About</a>
                     <a href="#mega-catalog"
                         class="px-4 py-2 rounded-full text-gray-800 hover:bg-white/80 hover:text-primary font-semibold transition-all duration-300 text-sm">Products</a>
+                    <a href="#about"
+                        class="px-4 py-2 rounded-full text-gray-800 hover:bg-white/80 hover:text-primary font-semibold transition-all duration-300 text-sm">About</a>
                     <a href="#industries"
                         class="px-4 py-2 rounded-full text-gray-800 hover:bg-white/80 hover:text-primary font-semibold transition-all duration-300 text-sm">Industries</a>
                     <a href="#contact"
@@ -307,13 +469,13 @@
                         class="mobile-link px-4 py-3 rounded-xl hover:bg-white/50 font-semibold text-gray-800 transition-all flex items-center gap-3">
                         <i class="fa-solid fa-house text-accent w-5 text-center"></i> Home
                     </a>
-                    <a href="#about"
-                        class="mobile-link px-4 py-3 rounded-xl hover:bg-white/50 font-semibold text-gray-800 transition-all flex items-center gap-3">
-                        <i class="fa-solid fa-circle-info text-accent w-5 text-center"></i> About
-                    </a>
                     <a href="#mega-catalog"
                         class="mobile-link px-4 py-3 rounded-xl hover:bg-white/50 font-semibold text-gray-800 transition-all flex items-center gap-3">
                         <i class="fa-solid fa-boxes-stacked text-accent w-5 text-center"></i> Products
+                    </a>
+                    <a href="#about"
+                        class="mobile-link px-4 py-3 rounded-xl hover:bg-white/50 font-semibold text-gray-800 transition-all flex items-center gap-3">
+                        <i class="fa-solid fa-circle-info text-accent w-5 text-center"></i> About
                     </a>
                     <a href="#industries"
                         class="mobile-link px-4 py-3 rounded-xl hover:bg-white/50 font-semibold text-gray-800 transition-all flex items-center gap-3">
@@ -324,9 +486,9 @@
                         <i class="fa-solid fa-envelope text-accent w-5 text-center"></i> Contact
                     </a>
                     <div class="border-t border-white/30 my-2"></div>
-                    <a href="tel:+919876543210"
+                    <a href="tel:+919875974500"
                         class="mobile-link px-4 py-3 rounded-xl hover:bg-white/50 font-bold text-primary transition-all flex items-center gap-3">
-                        <i class="fa-solid fa-phone text-accent w-5 text-center"></i> +91 98765 43210
+                        <i class="fa-solid fa-phone text-accent w-5 text-center"></i> +91 98759 74500
                     </a>
                     <a href="#contact"
                         class="mobile-link bg-accent text-white text-center px-4 py-3 rounded-xl font-bold shadow-lg hover:bg-[#e66000] transition-all">
@@ -378,18 +540,20 @@
                     <!-- Trust Metrics -->
                     <div class="grid grid-cols-3 gap-6 mt-12 border-t border-gray-300/40 pt-8">
                         <div>
-                            <h3 class="text-3xl font-extrabold text-gray-900">90+</h3>
+                            <h3 class="text-3xl font-extrabold text-gray-900" data-count="90" data-suffix="+">90+</h3>
                             <p class="text-sm font-semibold text-gray-500">Products</p>
                         </div>
                         <div>
-                            <h3 class="text-3xl font-extrabold text-gray-900">200+</h3>
+                            <h3 class="text-3xl font-extrabold text-gray-900" data-count="200" data-suffix="+">200+</h3>
                             <p class="text-sm font-semibold text-gray-500">B2B Clients</p>
                         </div>
                         <div>
-                            <h3 class="text-3xl font-extrabold text-gray-900">100%</h3>
+                            <h3 class="text-3xl font-extrabold text-gray-900" data-count="100" data-suffix="%">100%</h3>
                             <p class="text-sm font-semibold text-gray-500">Compliance</p>
                         </div>
                     </div>
+                    <!-- Mobile hero image -->
+                    <img src="assets/hero.jpg" alt="Safety worker" class="hero-mobile-img" loading="eager">
                 </div>
 
                 <!-- Hero Image -->
@@ -892,7 +1056,7 @@
     </footer>
 
     <!-- ========== FLOATING WHATSAPP BUTTON ========== -->
-    <a href="https://wa.me/919876543210?text=Hello%20AP%20Smart%20Safety%20LLP,%20I%20am%20interested%20in%20your%20industrial%20safety%20products."
+    <a href="https://wa.me/919875974500?text=Hello%20AP%20Smart%20Safety%20LLP,%20I%20am%20interested%20in%20your%20industrial%20safety%20products."
         target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Chat on WhatsApp"
         title="Chat with us on WhatsApp">
         <i class="fa-brands fa-whatsapp text-white text-2xl"></i>
@@ -1157,9 +1321,7 @@
                     // Scroll to form
                     const contactSection = document.getElementById('contact');
                     if (contactSection) {
-                        const navHeight = document.getElementById('navbar')?.offsetHeight || 80;
-                        const targetPosition = contactSection.getBoundingClientRect().top + window.pageYOffset - navHeight - 10;
-                        window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+                        contactSection.scrollIntoView({ behavior: 'smooth' });
                     }
                 }
                 closeQuickView();
@@ -1315,26 +1477,7 @@
                 }
             });
 
-            // ──────────────────────────────────────
-            // 5. SMOOTH SCROLL FOR ALL ANCHOR LINKS
-            // ──────────────────────────────────────
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    const targetId = this.getAttribute('href');
-                    if (targetId === '#') return;
-                    const targetElement = document.querySelector(targetId);
-                    if (targetElement) {
-                        e.preventDefault();
-                        const navHeight = navbar?.offsetHeight || 80;
-                        const targetPosition = targetElement.getBoundingClientRect().top + window
-                            .pageYOffset - navHeight - 10;
-                        window.scrollTo({
-                            top: targetPosition,
-                            behavior: 'smooth',
-                        });
-                    }
-                });
-            });
+            // Removed JS smooth scroll block as it is now handled natively via CSS (scroll-smooth scroll-pt-24)
 
             // ──────────────────────────────────────
             // 6. FORM VALIDATION
@@ -1425,11 +1568,112 @@
             });
 
             // ──────────────────────────────────────
-            // 7. INITIAL SETUP LOG
+            // 7. SCROLL PROGRESS + BACK TO TOP
+            // ──────────────────────────────────────
+            (function () {
+                const bar = document.getElementById('scroll-progress');
+                const btn = document.getElementById('back-to-top');
+                window.addEventListener('scroll', function () {
+                    const st = window.scrollY;
+                    const dh = document.documentElement.scrollHeight - window.innerHeight;
+                    if (bar) bar.style.width = (dh > 0 ? (st / dh) * 100 : 0) + '%';
+                    if (btn) btn.classList.toggle('visible', st > 400);
+                }, { passive: true });
+                if (btn) btn.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+            })();
+
+            // ──────────────────────────────────────
+            // 8. TOAST NOTIFICATIONS
+            // ──────────────────────────────────────
+            function showToast(msg, type, dur) {
+                type = type || 'info'; dur = dur || 3000;
+                var c = document.getElementById('toast-container');
+                if (!c) return;
+                var t = document.createElement('div');
+                var icon = type === 'success' ? 'fa-circle-check' : 'fa-circle-info';
+                t.className = 'toast ' + type;
+                t.innerHTML = '<i class="fa-solid ' + icon + '"></i> ' + msg;
+                c.appendChild(t);
+                setTimeout(function () {
+                    t.classList.add('hide');
+                    setTimeout(function () { t.remove(); }, 350);
+                }, dur);
+            }
+
+            // Wire addToInquiry to show a toast
+            var _origAddToInquiry = addToInquiry;
+            addToInquiry = function (name) {
+                _origAddToInquiry(name);
+                showToast('<strong>' + name + '</strong> added to inquiry!', 'success');
+            };
+
+            // ──────────────────────────────────────
+            // 9. ANIMATED STAT COUNTERS
+            // ──────────────────────────────────────
+            function animCount(el, target, suffix) {
+                var start = 0, total = 1200, step = target / (total / 16);
+                (function run() {
+                    start = Math.min(start + step, target);
+                    el.textContent = Math.floor(start) + suffix;
+                    if (start < target) requestAnimationFrame(run);
+                })();
+            }
+            var cObs = new IntersectionObserver(function (entries) {
+                entries.forEach(function (e) {
+                    if (!e.isIntersecting) return;
+                    animCount(e.target, +e.target.dataset.count, e.target.dataset.suffix || '');
+                    cObs.unobserve(e.target);
+                });
+            }, { threshold: 0.6 });
+            document.querySelectorAll('[data-count]').forEach(function (el) { cObs.observe(el); });
+
+            // ──────────────────────────────────────
+            // 10. ACTIVE NAV LINK ON SCROLL
+            // ──────────────────────────────────────
+            var _navLinks = document.querySelectorAll('nav .hidden.lg\\:flex a[href^="#"]');
+            var _secObs = new IntersectionObserver(function (entries) {
+                entries.forEach(function (e) {
+                    if (!e.isIntersecting) return;
+                    _navLinks.forEach(function (a) {
+                        a.classList.toggle('nav-active', a.getAttribute('href') === '#' + e.target.id);
+                    });
+                });
+            }, { threshold: 0.45 });
+            ['home', 'about', 'mega-catalog', 'industries', 'contact'].forEach(function (id) {
+                var s = document.getElementById(id);
+                if (s) _secObs.observe(s);
+            });
+
+            // ──────────────────────────────────────
+            // 11. PRODUCT CARD ENTRANCE ANIMATION
+            // ──────────────────────────────────────
+            function observeCards() {
+                var obs = new IntersectionObserver(function (entries) {
+                    entries.forEach(function (e) {
+                        if (!e.isIntersecting) return;
+                        var idx = +e.target.dataset.ci || 0;
+                        setTimeout(function () { e.target.classList.add('card-visible'); }, idx * 55);
+                        obs.unobserve(e.target);
+                    });
+                }, { threshold: 0.06 });
+                document.querySelectorAll('.product-card').forEach(function (c, i) {
+                    c.dataset.ci = i; obs.observe(c);
+                });
+            }
+            // Hook into filter/view-all re-renders
+            var _origFilter = renderProducts;
+            renderProducts = function (count, filter) {
+                _origFilter(count, filter);
+                setTimeout(observeCards, 60);
+            };
+            setTimeout(observeCards, 200);
+
+            // ──────────────────────────────────────
+            // 12. INITIAL SETUP LOG
             // ──────────────────────────────────────
             console.log('✅ AP Smart Safety LLP — Fully Refined & Ready');
-            console.log('🛡️  90+ Products | GSAP Animations | Working Mobile Menu | Form Validation | WhatsApp Float');
-            console.log('🔧 All bugs fixed: mobile menu, form labels, VanillaTilt, marquee, missing industries section, navbar scroll');
+            console.log('🛡️  90+ Products | GSAP | Mobile Menu | Form Validation | Dynamic Enhancements');
+            console.log('✨ New: Scroll progress, back-to-top, toasts, counters, active nav, card animations');
 
         })();
     </script>
